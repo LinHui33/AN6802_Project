@@ -1,19 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import pandas as pd
 from xgboost import XGBClassifier
 import pickle
 from flask import Flask,request,render_template,jsonify
 
-from static.get_dummies import GetDummies
+from get_dummies import GetDummies
 from werkzeug.utils import secure_filename
-
-
-# In[2]:
 
 
 # Load the encoder from the file
