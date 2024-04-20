@@ -26,9 +26,9 @@ class GetDummies(BaseEstimator, TransformerMixin):
 
 app = Flask(__name__)
 # Load the encoder from the file
-loaded_enc   = pickle.load(open("static/credit_score_multi_class_ord_encoder.pkl", "rb")) 
-loaded_le    = pickle.load(open("static/credit_score_multi_class_le.pkl", "rb"))
-loaded_dummy = pickle.load(open("static/credit_score_multi_class_dummy.pkl", "rb"))
+#loaded_enc   = pickle.load(open("static/credit_score_multi_class_ord_encoder.pkl", "rb")) 
+#loaded_le    = pickle.load(open("static/credit_score_multi_class_le.pkl", "rb"))
+#loaded_dummy = pickle.load(open("static/credit_score_multi_class_dummy.pkl", "rb"))
 
 # Load the model from the file
 loaded_model = XGBClassifier()
