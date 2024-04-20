@@ -3,4 +3,4 @@ numpy
 pandas
 flask
 xgboost
-pickle==1.0.2
+pickle
