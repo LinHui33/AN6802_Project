@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Upload for Classification</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .scrollable-container {
+            overflow-x: auto;
+            overflow-y: auto;
+            height: 400px; /* Adjust height as necessary */
+        }
+        .sticky-header th {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1020; /* Bootstrap's navbar is 1030, modal is 1050, tooltip is 1080 */
+        }
+        .wide-table {
+            width: 100%; /* Adjust if necessary for very wide tables */
+            margin-bottom: 0; /* Removes bottom margin */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Credit Score Multi-Class Classification</h1>
+        <p>Please upload the customer csv file for Credit Score Classification</p>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" class="form-control-file" name="file" id="fileInput">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+        <div id="tableContainer" class="scrollable-container"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var formData = new FormData();
+            formData.append('file', document.getElementById('fileInput').files[0]);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var tableHTML = '<table class="table table-striped wide-table sticky-header">';
+                var creditScoreIndex = data.columns.indexOf('Credit Score'); // Adjust column name if different
+
+                // Add header row
+                tableHTML += '<thead class="thead-light"><tr>';
+                for (var i = 0; i < data.columns.length; i++) {
+                    tableHTML += '<th>' + data.columns[i] + '</th>';
+                }
+                tableHTML += '</tr></thead><tbody>';
+
+                // Add data rows
+                for (var i = 0; i < data.data.length; i++) {
+                    var rowClass = '';
+                    if (data.data[i][creditScoreIndex] === 'Poor') {
+                        rowClass = 'table-danger';
+                    } else if (data.data[i][creditScoreIndex] === 'Good') {
+                        rowClass = 'table-success';
+                    }
+
+                    tableHTML += '<tr class="' + rowClass + '">';
+                    for (var j = 0; j < data.data[i].length; j++) {
+                        tableHTML += '<td>' + data.data[i][j] + '</td>';
+                    }
+                    tableHTML += '</tr>';
+                }
+
+                tableHTML += '</tbody></table>';
+
+                document.getElementById('tableContainer').innerHTML = tableHTML;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
