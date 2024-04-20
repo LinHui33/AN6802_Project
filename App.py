@@ -6,9 +6,9 @@ from xgboost import XGBClassifier
 import pickle
 from flask import Flask,request,render_template,jsonify
 
-from get_dummies import GetDummies
+app = Flask(__name__)
+from static.get_dummies import GetDummies
 from werkzeug.utils import secure_filename
-
 
 # Load the encoder from the file
 loaded_enc   = pickle.load(open("static/credit_score_multi_class_ord_encoder.pkl", "rb")) 
@@ -19,10 +19,6 @@ loaded_dummy = pickle.load(open("static/credit_score_multi_class_dummy.pkl", "rb
 loaded_model = XGBClassifier()
 loaded_model.load_model("static/credit_score_multi_class_xgboost_model.json")
 
-
-# In[3]:
-
-
 selected_col = ['Total_EMI_per_month', 'Num_Bank_Accounts', 'Num_of_Delayed_Payment',
  'Delay_from_due_date', 'Changed_Credit_Limit', 'Num_Credit_Card',
  'Outstanding_Debt', 'Interest_Rate', 'Credit_Mix']
@@ -31,16 +27,6 @@ response_data = {
     'columns': [],
     'data': []
 }
-
-
-# In[4]:
-
-
-app = Flask(__name__)
-
-
-# In[5]:
-
 
 @app.route("/",methods = ["GET","POST"])
 def home():
@@ -70,16 +56,5 @@ def upload():
     return jsonify(response_data)
     
 
-
-# In[6]:
-
-
 if __name__ == "__main__":
     app.run()
-
-
-# In[ ]:
-
-
-
-
